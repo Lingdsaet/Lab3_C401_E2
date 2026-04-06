@@ -62,3 +62,28 @@ def get_weather(location: str, date: str) -> str:
         })
     except Exception as error:
         return _safe_json({"error": f"Lỗi Weather API: {str(error)}"})
+def get_transport(
+    origin: str,
+    destination: str,
+    date: str,
+    transport_type: str = "máy bay",
+) -> str:
+    query = (
+        f"vé {transport_type} từ {origin} đến {destination} "
+        f"ngày {date} giá bao nhiêu tiền VND lịch khởi hành"
+    )
+    try:
+        results = _search_web(query, max_results=5)
+        return _safe_json({
+            "origin":         origin,
+            "destination":    destination,
+            "date":           date,
+            "transport_type": transport_type,
+            "currency":       "VND",
+            "source":         "tavily",
+            "query":          query,
+            "results":        results,
+        })
+    except Exception as error:
+        return _safe_json({"error": f"Lỗi tìm phương tiện: {str(error)}", "query": query})
+
